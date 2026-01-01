@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeterGauge.ai - Find Your Career Direction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --cream: #FAF8F3;
+            --soft-black: #1A1A1A;
+            --warm-gray: #8B8580;
+            --accent-sage: #9CAF88;
+            --accent-terracotta: #D4896C;
+            --light-sage: #E8EDE4;
+            --shadow: rgba(26, 26, 26, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--soft-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Smooth Page Transitions */
+        .screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Decorative Background Elements */
+        .bg-decoration {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        .bg-circle-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-sage) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            filter: blur(60px);
+        }
+
+        .bg-circle-2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--accent-terracotta) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -80px;
+            left: -80px;
+            filter: blur(60px);
+        }
+
+        /* Navigation & Progress */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(139, 133, 128, 0.2);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-sage), var(--accent-terracotta));
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-indicator {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.875rem;
+            color: var(--warm-gray);
+            font-weight: 500;
+            z-index: 999;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Container */
+        .container {
+            max-width: 680px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Icons */
+        .icon-large {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--accent-sage), var(--accent-terracotta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--warm-gray);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        /* Quote Box */
+        .quote-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-sage);
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px var(--shadow);
+            animation: fadeInUp 0.8s ease 0.6s backwards;
+        }
+
+        .quote-box p {
+            font-style: italic;
+            color: var(--warm-gray);
+            font-size: 1.125rem;
+        }
+
+        .quote-box cite {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            font-style: normal;
+            color: var(--accent-sage);
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 3rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: fadeInUp 0.8s ease 0.8s backwards;
+        }
+
+        .btn-primary {
+            background: var(--soft-black);
+            color: var(--cream);
+            box-shadow: 0 10px 30px rgba(26, 26, 26, 0.15);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(26, 26, 26, 0.25);
+        }
+
+        .btn-primary:disabled {
+            background: var(--warm-gray);
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--soft-black);
+            border: 2px solid var(--soft-black);
+        }
+
+        .btn-secondary:hover {
+            background: var(--soft-black);
+            color: var(--cream);
+        }
+
+        /* Option Cards */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .option-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--shadow);
+            animation: fadeInUp 0.6s ease backwards;
+        }
+
+        .option-card:nth-child(1) { animation-delay: 0.1s; }
+        .option-card:nth-child(2) { animation-delay: 0.2s; }
+        .option-card:nth-child(3) { animation-delay: 0.3s; }
+        .option-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px var(--shadow);
+        }
+
+        .option-card.selected {
+            border-color: var(--accent-sage);
+            background: var(--light-sage);
+            transform: translateY(-4px);
+            position: relative;
+        }
+
+        .option-card.selected::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            background: var(--accent-sage);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.875rem;
+            animation: checkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes checkPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .option-card i {
+            font-size: 2rem;
+            color: var(--accent-terracotta);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .option-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .option-card p {
+            font-size: 0.875rem;
+            color: var(--warm-gray);
+            line-height: 1.5;
+        }
+
+        /* Result Cards */
+        .results-container {
+            margin: 3rem 0;
+        }
+
+        .result-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 6px solid var(--accent-sage);
+            animation: fadeInUp 0.6s ease backwards;
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:nth-child(1) { animation-delay: 0.2s; border-left-color: var(--accent-sage); }
+        .result-card:nth-child(2) { animation-delay: 0.4s; border-left-color: var(--accent-terracotta); }
+        .result-card:nth-child(3) { animation-delay: 0.6s; border-left-color: var(--warm-gray); }
+
+        .result-card:hover {
+            transform: translateX(8px);
+        }
+
+        .result-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--accent-sage);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .result-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-card .result-icon {
+            font-size: 1.5rem;
+            color: var(--accent-terracotta);
+            margin-right: 0.5rem;
+        }
+
+        .result-card p {
+            color: var(--warm-gray);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .learn-more {
+            color: var(--accent-sage);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .learn-more:hover {
+            gap: 1rem;
+        }
+
+        /* Success Message */
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent-sage);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease backwards;
+        }
+
+        .success-badge i {
+            font-size: 1.25rem;
+        }
+
+        /* Action Buttons Container */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .icon-large {
+                font-size: 3rem;
+            }
+
+            .btn {
+                padding: 0.875rem 2rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-flex;
+            gap: 0.5rem;
+        }
+
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-sage);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Decorations -->
+    <div class="bg-decoration bg-circle-1"></div>
+    <div class="bg-decoration bg-circle-2"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Step Indicator -->
+    <div class="step-indicator" id="stepIndicator"></div>
+
+    <!-- Screen 1: Welcome -->
+    <div class="screen" id="screen1">
+        <div class="container" style="text-align: center;">
+            <i class="fas fa-compass icon-large"></i>
+            <h1>Feeling confused about<br>your career?</h1>
+            <p class="subtitle">You're not alone. Most graduates feel overwhelmed by endless options and don't know where to start. This short process will help you find clarity—no pressure, no commitments.</p>
+
+            <button class="btn btn-primary" onclick="goToScreen(2)">Take the First Step</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Interests -->
+    <div class="screen hidden" id="screen2">
+        <div class="container">
+            <i class="fas fa-lightbulb icon-large" style="text-align: center; display: block;"></i>
+            <h2 style="text-align: center;">What interests you?</h2>
+            <p class="subtitle" style="text-align: center;">No pressure—just pick what sounds most appealing</p>
+
+            <div class="options-grid">
+                <div class="option-card" onclick="selectOption(this, 'interests')">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <h3>Solving Problems</h3>
+                    <p>Breaking down complex challenges and finding solutions</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'interests')">
+                    <i class="fas fa-palette"></i>
+                    <h3>Creating Things</h3>
+                    <p>Bringing ideas to life through design or building</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'interests')">
+                    <i class="fas fa-hands-helping"></i>
+                    <h3>Helping People</h3>
+                    <p>Making a positive impact on others' lives</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'interests')">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>Understanding Systems</h3>
+                    <p>Analyzing how things work and connect</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="nextBtn2" onclick="goToScreen(3)" disabled>Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 3: Strengths -->
+    <div class="screen hidden" id="screen3">
+        <div class="container">
+            <i class="fas fa-star icon-large" style="text-align: center; display: block;"></i>
+            <h2 style="text-align: center;">What are you naturally good at?</h2>
+            <p class="subtitle" style="text-align: center;">Think about what others compliment you on or what feels easy to you</p>
+
+            <div class="options-grid">
+                <div class="option-card" onclick="selectOption(this, 'strengths')">
+                    <i class="fas fa-brain"></i>
+                    <h3>Breaking Down Complexity</h3>
+                    <p>Making difficult concepts simple and clear</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'strengths')">
+                    <i class="fas fa-comments"></i>
+                    <h3>Communicating Ideas</h3>
+                    <p>Expressing thoughts clearly and persuasively</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'strengths')">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Organizing & Planning</h3>
+                    <p>Structuring projects and managing details</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'strengths')">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Creative Solutions</h3>
+                    <p>Thinking outside the box and innovating</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="nextBtn3" onclick="goToScreen(4)" disabled>Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 4: Work Style -->
+    <div class="screen hidden" id="screen4">
+        <div class="container">
+            <i class="fas fa-bullseye icon-large" style="text-align: center; display: block;"></i>
+            <h2 style="text-align: center;">How do you prefer to work?</h2>
+            <p class="subtitle" style="text-align: center;">No right answer—just what feels right for you</p>
+
+            <div class="options-grid">
+                <div class="option-card" onclick="selectOption(this, 'workstyle')">
+                    <i class="fas fa-user"></i>
+                    <h3>Independent Focus</h3>
+                    <p>Deep work with minimal distractions</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'workstyle')">
+                    <i class="fas fa-users"></i>
+                    <h3>Team Collaboration</h3>
+                    <p>Working closely with others toward shared goals</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'workstyle')">
+                    <i class="fas fa-random"></i>
+                    <h3>Variety & Change</h3>
+                    <p>Dynamic projects and new challenges</p>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'workstyle')">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>Structure & Clear Goals</h3>
+                    <p>Defined processes and measurable outcomes</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="nextBtn4" onclick="showResults()" disabled>See My Directions</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 5: Results -->
+    <div class="screen hidden" id="screen5">
+        <div class="container">
+            <div style="text-align: center;">
+                <div class="success-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Journey Complete</span>
+                </div>
+                <h2>Here's where you could start</h2>
+                <p class="subtitle">These are starting directions, not final decisions. You don't have to pick just one right now.</p>
+            </div>
+
+            <div class="results-container">
+                <div class="result-card">
+                    <div class="result-number">1</div>
+                    <h3><i class="fas fa-code result-icon"></i>Technical Problem Solver</h3>
+                    <p>Roles that involve analyzing complex systems, building solutions, and working with data or technology. Think software development, data analysis, systems engineering, or product management.</p>
+                    <a href="#" class="learn-more">Learn more about this path <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-number">2</div>
+                    <h3><i class="fas fa-pen-fancy result-icon"></i>Creative Communicator</h3>
+                    <p>Careers focused on crafting narratives, designing experiences, or expressing ideas visually. Consider UX design, content strategy, marketing, brand design, or editorial work.</p>
+                    <a href="#" class="learn-more">Learn more about this path <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-number">3</div>
+                    <h3><i class="fas fa-handshake result-icon"></i>People-Centered Strategist</h3>
+                    <p>Paths that combine understanding people with organizational goals. HR strategy, consulting, customer success, research, or community building might resonate.</p>
+                    <a href="#" class="learn-more">Learn more about this path <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="startOver()"><i class="fas fa-redo"></i> Start Over</button>
+                <button class="btn btn-primary" onclick="alert('🎯 Exploration resources coming soon! We\'ll provide curated guides, courses, and next steps for each career path.')"><i class="fas fa-compass"></i> Explore These Paths</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 1;
+        let selections = {
+            interests: null,
+            strengths: null,
+            workstyle: null
+        };
+
+        // Career paths database based on user selections
+        const careerPaths = {
+            // Problem Solving paths
+            'solving-complexity-independent': {
+                path1: { title: 'Software Engineer / Developer', icon: 'fa-code', desc: 'Build and optimize software systems, working on complex technical challenges with deep focus time. Ideal for logical thinkers who enjoy solving puzzles independently.' },
+                path2: { title: 'Data Scientist / Analyst', icon: 'fa-chart-line', desc: 'Extract insights from data, build models, and solve business problems through analysis. Perfect for those who love finding patterns and working independently with numbers.' },
+                path3: { title: 'Research Scientist', icon: 'fa-flask', desc: 'Investigate complex problems in your field of interest through systematic research. Great for deep thinkers who prefer focused, independent investigation.' }
+            },
+            'solving-complexity-team': {
+                path1: { title: 'Product Manager', icon: 'fa-sitemap', desc: 'Bridge technical complexity and user needs, working with cross-functional teams to build solutions. Ideal for problem-solvers who thrive in collaborative environments.' },
+                path2: { title: 'Management Consultant', icon: 'fa-handshake', desc: 'Help organizations solve complex business problems by analyzing systems and implementing solutions. Perfect for collaborative problem-solvers.' },
+                path3: { title: 'DevOps Engineer', icon: 'fa-server', desc: 'Build and maintain infrastructure that keeps systems running smoothly, working closely with development teams to solve technical challenges.' }
+            },
+            'solving-complexity-variety': {
+                path1: { title: 'Technical Consultant', icon: 'fa-laptop-code', desc: 'Work across different clients and projects, solving varied technical challenges. Perfect for problem-solvers who crave diversity and new challenges.' },
+                path2: { title: 'Solutions Architect', icon: 'fa-drafting-compass', desc: 'Design technical solutions for different client problems. Ideal for those who enjoy variety in problem-solving.' },
+                path3: { title: 'Freelance Developer', icon: 'fa-code-branch', desc: 'Take on diverse coding projects independently. Great for independent workers who want project variety.' }
+            },
+            'solving-complexity-structure': {
+                path1: { title: 'Systems Engineer', icon: 'fa-cogs', desc: 'Design and maintain complex technical systems with clear specifications. Perfect for structured problem-solvers.' },
+                path2: { title: 'Quality Assurance Lead', icon: 'fa-check-double', desc: 'Ensure software quality through systematic testing. Ideal for detail-oriented problem-solvers who thrive on structure.' },
+                path3: { title: 'Technical Project Manager', icon: 'fa-tasks', desc: 'Manage technical projects with defined goals and timelines. Great for organized problem-solvers.' }
+            },
+            'solving-communication-team': {
+                path1: { title: 'UX Researcher', icon: 'fa-users', desc: 'Understand user problems through research and communicate insights to design teams. Perfect for those who combine analytical thinking with people skills.' },
+                path2: { title: 'Technical Product Manager', icon: 'fa-project-diagram', desc: 'Translate technical complexity into clear strategies, working with engineering teams. Great for communicators who enjoy solving technical problems collaboratively.' },
+                path3: { title: 'Customer Success Manager', icon: 'fa-headset', desc: 'Help clients solve problems with your product through clear communication and teamwork.' }
+            },
+            'solving-communication-independent': {
+                path1: { title: 'Technical Writer', icon: 'fa-file-alt', desc: 'Create clear documentation for complex technical products. Perfect for independent workers who can explain difficult concepts.' },
+                path2: { title: 'Business Analyst', icon: 'fa-chart-bar', desc: 'Analyze business problems and communicate solutions through reports. Ideal for independent analytical communicators.' },
+                path3: { title: 'Technical Blogger / Content Creator', icon: 'fa-blog', desc: 'Explain technical concepts through writing and media. Great for solo communicators.' }
+            },
+            'solving-organizing-team': {
+                path1: { title: 'Project Manager', icon: 'fa-clipboard-list', desc: 'Coordinate teams to solve project challenges through effective planning. Perfect for organized problem-solvers who work well with teams.' },
+                path2: { title: 'Operations Manager', icon: 'fa-sitemap', desc: 'Solve operational challenges through systematic planning and team coordination.' },
+                path3: { title: 'Scrum Master', icon: 'fa-users-cog', desc: 'Facilitate team problem-solving through agile methodologies. Ideal for organized team players.' }
+            },
+            'solving-organizing-structure': {
+                path1: { title: 'Operations Analyst', icon: 'fa-chart-pie', desc: 'Optimize business operations through structured analysis and planning. Perfect for systematic organizers.' },
+                path2: { title: 'Supply Chain Manager', icon: 'fa-truck', desc: 'Manage logistics and solve supply chain problems with clear processes.' },
+                path3: { title: 'Process Improvement Specialist', icon: 'fa-sync', desc: 'Identify and solve inefficiencies through structured methodologies.' }
+            },
+            'solving-creative-variety': {
+                path1: { title: 'Product Designer', icon: 'fa-magic', desc: 'Solve user problems through creative design solutions across diverse projects.' },
+                path2: { title: 'Innovation Consultant', icon: 'fa-lightbulb', desc: 'Help companies solve problems through creative thinking and varied approaches.' },
+                path3: { title: 'Design Thinking Facilitator', icon: 'fa-users', desc: 'Guide teams to solve problems creatively through structured innovation.' }
+            },
+
+            // Creating Things paths
+            'creating-creative-independent': {
+                path1: { title: 'Graphic Designer / Illustrator', icon: 'fa-paint-brush', desc: 'Create visual content and brand identities with creative freedom. Perfect for artists who enjoy independent creative work.' },
+                path2: { title: 'Game Designer', icon: 'fa-gamepad', desc: 'Design interactive experiences independently. Great for creative problem-solvers who work well alone.' },
+                path3: { title: 'Content Creator / YouTuber', icon: 'fa-video', desc: 'Produce creative multimedia content independently. Ideal for self-motivated creators.' }
+            },
+            'creating-creative-team': {
+                path1: { title: 'UX/UI Designer', icon: 'fa-mobile-alt', desc: 'Design user interfaces collaborating with product teams. Perfect for creative team players.' },
+                path2: { title: 'Creative Director', icon: 'fa-palette', desc: 'Lead creative vision for brands, working with design teams. Ideal for collaborative creatives.' },
+                path3: { title: 'Brand Designer', icon: 'fa-copyright', desc: 'Develop brand identities working closely with marketing teams.' }
+            },
+            'creating-creative-variety': {
+                path1: { title: 'Freelance Designer', icon: 'fa-pen-fancy', desc: 'Take on diverse creative projects for different clients. Perfect for creators who love variety.' },
+                path2: { title: 'Multimedia Artist', icon: 'fa-film', desc: 'Work across video, graphics, and animation on varied projects.' },
+                path3: { title: 'Experience Designer', icon: 'fa-vr-cardboard', desc: 'Create diverse interactive experiences from events to digital products.' }
+            },
+            'creating-communication-team': {
+                path1: { title: 'Marketing Designer', icon: 'fa-bullhorn', desc: 'Create visual marketing campaigns collaborating with marketing teams.' },
+                path2: { title: 'Social Media Manager', icon: 'fa-share-alt', desc: 'Create engaging social content working with brand teams. Perfect for creative communicators.' },
+                path3: { title: 'Content Strategist', icon: 'fa-newspaper', desc: 'Plan and create content strategies with cross-functional teams.' }
+            },
+            'creating-communication-independent': {
+                path1: { title: 'Freelance Writer / Author', icon: 'fa-pen-nib', desc: 'Write books, articles, or scripts independently. Perfect for solo creative writers.' },
+                path2: { title: 'Blogger / Newsletter Creator', icon: 'fa-envelope', desc: 'Create written content and build an audience independently.' },
+                path3: { title: 'Copywriter', icon: 'fa-edit', desc: 'Write compelling copy for brands as an independent contractor.' }
+            },
+            'creating-organizing-structure': {
+                path1: { title: 'Production Manager', icon: 'fa-film', desc: 'Organize creative production with structured workflows and clear deadlines.' },
+                path2: { title: 'Editorial Manager', icon: 'fa-book', desc: 'Manage content creation and publication with organized systems.' },
+                path3: { title: 'Creative Producer', icon: 'fa-clapperboard', desc: 'Coordinate creative projects with structured production schedules.' }
+            },
+
+            // Helping People paths
+            'helping-communication-team': {
+                path1: { title: 'Human Resources Manager', icon: 'fa-user-friends', desc: 'Support employees and build workplace culture through communication and collaboration.' },
+                path2: { title: 'Customer Success Manager', icon: 'fa-headset', desc: 'Help clients succeed by understanding their needs and working with internal teams.' },
+                path3: { title: 'Therapist / Counselor', icon: 'fa-heart', desc: 'Support individuals through challenges. Great for empathetic listeners.' }
+            },
+            'helping-communication-independent': {
+                path1: { title: 'Life Coach', icon: 'fa-compass', desc: 'Help individuals achieve goals through one-on-one coaching sessions.' },
+                path2: { title: 'Online Therapist', icon: 'fa-comments', desc: 'Provide counseling services remotely and independently.' },
+                path3: { title: 'Career Counselor', icon: 'fa-briefcase', desc: 'Guide individuals in career decisions through independent consultations.' }
+            },
+            'helping-organizing-team': {
+                path1: { title: 'Healthcare Administrator', icon: 'fa-hospital', desc: 'Manage healthcare facilities to ensure quality patient care through team coordination.' },
+                path2: { title: 'Event Coordinator', icon: 'fa-calendar-alt', desc: 'Plan events that bring people together for meaningful experiences.' },
+                path3: { title: 'Nonprofit Program Manager', icon: 'fa-hands-helping', desc: 'Organize programs that help communities, working with volunteers and staff.' }
+            },
+            'helping-organizing-structure': {
+                path1: { title: 'Social Services Manager', icon: 'fa-home', desc: 'Coordinate social support programs with structured processes and clear outcomes.' },
+                path2: { title: 'Patient Care Coordinator', icon: 'fa-user-md', desc: 'Organize healthcare services for patients with systematic approaches.' },
+                path3: { title: 'Community Outreach Manager', icon: 'fa-globe', desc: 'Plan and execute community programs with measurable impact goals.' }
+            },
+            'helping-creative-variety': {
+                path1: { title: 'Art Therapist', icon: 'fa-paint-brush', desc: 'Help people through creative expression across diverse populations and settings.' },
+                path2: { title: 'Youth Program Director', icon: 'fa-child', desc: 'Create engaging programs for young people, adapting to different needs.' },
+                path3: { title: 'Diversity & Inclusion Specialist', icon: 'fa-users', desc: 'Help organizations build inclusive cultures through creative approaches.' }
+            },
+
+            // Understanding Systems paths
+            'systems-complexity-independent': {
+                path1: { title: 'Systems Analyst', icon: 'fa-network-wired', desc: 'Analyze and optimize complex systems independently. Perfect for analytical thinkers.' },
+                path2: { title: 'Financial Analyst', icon: 'fa-chart-line', desc: 'Analyze financial systems and market trends independently.' },
+                path3: { title: 'Security Analyst', icon: 'fa-shield-alt', desc: 'Analyze security systems and identify vulnerabilities through deep individual work.' }
+            },
+            'systems-complexity-team': {
+                path1: { title: 'Business Systems Analyst', icon: 'fa-briefcase', desc: 'Analyze business systems working with stakeholders to implement improvements.' },
+                path2: { title: 'Enterprise Architect', icon: 'fa-building', desc: 'Design large-scale system architectures collaborating with technical teams.' },
+                path3: { title: 'Technical Consultant', icon: 'fa-laptop', desc: 'Help clients optimize their systems through collaborative analysis.' }
+            },
+            'systems-organizing-structure': {
+                path1: { title: 'Operations Manager', icon: 'fa-cogs', desc: 'Optimize business operations with clear KPIs and structured processes.' },
+                path2: { title: 'Business Analyst', icon: 'fa-chart-bar', desc: 'Analyze business systems with structured methodologies and clear objectives.' },
+                path3: { title: 'Supply Chain Manager', icon: 'fa-truck', desc: 'Manage logistics systems with systematic planning and measurable goals.' }
+            },
+            'systems-organizing-team': {
+                path1: { title: 'Program Manager', icon: 'fa-tasks', desc: 'Coordinate multiple projects and teams to optimize organizational systems.' },
+                path2: { title: 'Process Manager', icon: 'fa-sync-alt', desc: 'Improve business processes working collaboratively with different departments.' },
+                path3: { title: 'Integration Manager', icon: 'fa-plug', desc: 'Manage system integrations coordinating between technical and business teams.' }
+            },
+            'systems-communication-team': {
+                path1: { title: 'Technical Account Manager', icon: 'fa-user-tie', desc: 'Help clients understand and use complex systems through clear communication and teamwork.' },
+                path2: { title: 'IT Project Manager', icon: 'fa-project-diagram', desc: 'Lead technical projects, communicating system requirements to teams.' },
+                path3: { title: 'Business Intelligence Analyst', icon: 'fa-chart-pie', desc: 'Analyze data systems and communicate insights to stakeholders.' }
+            },
+            'systems-creative-variety': {
+                path1: { title: 'Systems Innovation Consultant', icon: 'fa-lightbulb', desc: 'Help organizations reimagine their systems through creative approaches and varied projects.' },
+                path2: { title: 'Organizational Designer', icon: 'fa-sitemap', desc: 'Design organizational structures and systems creatively across different companies.' },
+                path3: { title: 'Change Management Consultant', icon: 'fa-exchange-alt', desc: 'Guide system transformations through creative problem-solving in diverse contexts.' }
+            }
+        };
+
+        function normalizeSelection(text) {
+            // Convert to lowercase and extract key words
+            const lower = text.toLowerCase();
+            
+            // Interests mapping
+            if (lower.includes('solving') || lower.includes('problem')) return 'solving';
+            if (lower.includes('creating') || lower.includes('create')) return 'creating';
+            if (lower.includes('helping') || lower.includes('help')) return 'helping';
+            if (lower.includes('understanding') || lower.includes('system')) return 'systems';
+            
+            // Strengths mapping
+            if (lower.includes('complexity') || lower.includes('breaking')) return 'complexity';
+            if (lower.includes('communicating') || lower.includes('communication')) return 'communication';
+            if (lower.includes('organizing') || lower.includes('planning')) return 'organizing';
+            if (lower.includes('creative') || lower.includes('solution')) return 'creative';
+            
+            // Work style mapping
+            if (lower.includes('independent') || lower.includes('focus')) return 'independent';
+            if (lower.includes('team') || lower.includes('collaboration')) return 'team';
+            if (lower.includes('variety') || lower.includes('change')) return 'variety';
+            if (lower.includes('structure') || lower.includes('goals')) return 'structure';
+            
+            return text;
+        }
+
+        function goToScreen(screenNumber) {
+            // Hide current screen
+            document.getElementById(`screen${currentScreen}`).classList.add('hidden');
+            
+            // Show new screen
+            setTimeout(() => {
+                document.getElementById(`screen${screenNumber}`).classList.remove('hidden');
+                currentScreen = screenNumber;
+                updateProgress();
+                updateStepIndicator();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 200);
+        }
+
+        function updateProgress() {
+            const progress = {
+                1: 0,
+                2: 25,
+                3: 50,
+                4: 75,
+                5: 100
+            };
+            document.getElementById('progressBar').style.width = progress[currentScreen] + '%';
+        }
+
+        function updateStepIndicator() {
+            const indicator = document.getElementById('stepIndicator');
+            if (currentScreen === 1 || currentScreen === 5) {
+                indicator.style.display = 'none';
+            } else {
+                indicator.style.display = 'block';
+                indicator.textContent = `Step ${currentScreen - 1} of 3`;
+            }
+        }
+
+        function selectOption(element, category) {
+            // Remove selection from all cards in this category
+            const cards = element.parentElement.querySelectorAll('.option-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            
+            // Add selection to clicked card
+            element.classList.add('selected');
+            
+            // Store selection
+            selections[category] = element.querySelector('h3').textContent;
+            
+            // Enable the next button
+            const nextBtn = document.getElementById(`nextBtn${currentScreen}`);
+            if (nextBtn) {
+                nextBtn.disabled = false;
+            }
+        }
+
+        function generateResults() {
+            // Normalize selections to create a key
+            const interest = normalizeSelection(selections.interests);
+            const strength = normalizeSelection(selections.strengths);
+            const workstyle = normalizeSelection(selections.workstyle);
+            
+            const key = `${interest}-${strength}-${workstyle}`;
+            
+            console.log('User selections:', selections);
+            console.log('Normalized key:', key);
+            
+            // Try to find exact match, otherwise use default
+            let paths = careerPaths[key] || careerPaths['default'];
+            
+            console.log('Selected paths:', paths);
+            
+            // Generate HTML for results
+            const resultsHTML = `
+                <div class="result-card">
+                    <div class="result-number">1</div>
+                    <h3><i class="fas ${paths.path1.icon} result-icon"></i>${paths.path1.title}</h3>
+                    <p>${paths.path1.desc}</p>
+                    <a href="javascript:void(0)" class="learn-more" onclick="alert('Exploration resources coming soon! This path: ${paths.path1.title}')">Learn more about this path <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-number">2</div>
+                    <h3><i class="fas ${paths.path2.icon} result-icon"></i>${paths.path2.title}</h3>
+                    <p>${paths.path2.desc}</p>
+                    <a href="javascript:void(0)" class="learn-more" onclick="alert('Exploration resources coming soon! This path: ${paths.path2.title}')">Learn more about this path <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-number">3</div>
+                    <h3><i class="fas ${paths.path3.icon} result-icon"></i>${paths.path3.title}</h3>
+                    <p>${paths.path3.desc}</p>
+                    <a href="javascript:void(0)" class="learn-more" onclick="alert('Exploration resources coming soon! This path: ${paths.path3.title}')">Learn more about this path <i class="fas fa-arrow-right"></i></a>
+                </div>
+            `;
+
+            return resultsHTML;
+        }
+
+        function showResults() {
+            // Generate personalized results based on selections
+            const resultsContainer = document.querySelector('#screen5 .results-container');
+            resultsContainer.innerHTML = generateResults();
+            
+            goToScreen(5);
+        }
+
+        function startOver() {
+            selections = {
+                interests: null,
+                strengths: null,
+                workstyle: null
+            };
+            
+            // Reset all selections
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Disable all next buttons
+            document.querySelectorAll('[id^="nextBtn"]').forEach(btn => {
+                btn.disabled = true;
+            });
+            
+            goToScreen(1);
+        }
+
+        // Initialize
+        updateProgress();
+        updateStepIndicator();
+    </script>
+</body>
+</html>
